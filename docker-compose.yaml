@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  orodha-notification-server:
+    hostname: notification-service-server
+    container_name: notification-service
+    image: edisonstuart/orodha-notification-service:latest
+    ports:
+      - "5000:5000"
+    networks:
+      - orodha-network
+
+  orodha-notification-mongo:
+    hostname: notification-service-mongo
+    container_name: notification-service-mongo
+    image: mongo
+    restart: always
+    volumes:
+      - ./scripts/notification_scripts:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_DATABASE: admin
+      NOTIF_MONGO_INITDB_ROOT_USERNAME: $NOTIFDBROOTUSER
+      NOTIF_MONGO_INITDB_ROOT_PASSWORD: $NOTIFDBROOTPASSWORD
+      NOTIF_DBUSER: $NOTIFDBUSER
+      NOTIF_DBPASSWORD: $NOTIFDBPASSWORD
+      NOTIF_DBNAME: $NOTIFDBNAME
+    ports:
+      - "27017:27017"
+    networks:
+      - orodha-network
+
+networks:
+  orodha-network:
+    driver: bridge
