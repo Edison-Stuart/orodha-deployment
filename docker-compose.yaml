@@ -12,6 +12,54 @@ services:
     networks:
       - orodha-network
 
+  orodha-user-server:
+    hostname: user-service-server
+    container_name: user-service
+    image: edisonstuart/orodha-user-service:latest
+    networks:
+      - orodha-network
+
+  orodha-user-mongo:
+    hostname: user-service-mongo
+    container_name: user-service-mongo
+    image: mongo
+    restart: always
+    volumes:
+      - ./scripts/user_scripts:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_DATABASE: admin
+      USER_MONGO_INITDB_ROOT_USERNAME: $USERDBROOTUSER
+      USER_MONGO_INITDB_ROOT_PASSWORD: $USERDBROOTPASSWORD
+      USER_DBUSER: $USERDBUSER
+      USER_DBPASSWORD: $USERDBPASSWORD
+      USER_DBNAME: $USERDBNAME
+    networks:
+      - orodha-network
+
+  orodha-list-server:
+    hostname: list-service-server
+    container_name: list-service
+    image: edisonstuart/orodha-list-service:latest
+    networks:
+      - orodha-network
+
+  orodha-list-mongo:
+    hostname: list-service-mongo
+    container_name: list-service-mongo
+    image: mongo
+    restart: always
+    volumes:
+      - ./scripts/list_scripts:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_DATABASE: admin
+      LIST_MONGO_INITDB_ROOT_USERNAME: $LISTDBROOTUSER
+      LIST_MONGO_INITDB_ROOT_PASSWORD: $LISTDBROOTPASSWORD
+      LIST_DBUSER: $LISTDBUSER
+      LIST_DBPASSWORD: $LISTDBPASSWORD
+      LIST_DBNAME: $LISTDBNAME
+    networks:
+      - orodha-network
+
   orodha-notification-server:
     hostname: notification-service-server
     container_name: notification-service
