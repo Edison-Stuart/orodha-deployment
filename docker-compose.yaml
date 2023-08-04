@@ -1,12 +1,21 @@
 version: "3"
 
 services:
+  orodha-gateway:
+    hostname: orodha-gateway
+    container_name: orodha-gateway
+    image: nginx:latest
+    volumes:
+      - ./config/gateway/conf.d:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+    networks:
+      - orodha-network
+
   orodha-notification-server:
     hostname: notification-service-server
     container_name: notification-service
     image: edisonstuart/orodha-notification-service:latest
-    ports:
-      - "5000:5000"
     networks:
       - orodha-network
 
@@ -24,8 +33,6 @@ services:
       NOTIF_DBUSER: $NOTIFDBUSER
       NOTIF_DBPASSWORD: $NOTIFDBPASSWORD
       NOTIF_DBNAME: $NOTIFDBNAME
-    ports:
-      - "27017:27017"
     networks:
       - orodha-network
 
