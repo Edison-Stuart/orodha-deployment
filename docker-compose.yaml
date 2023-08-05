@@ -25,11 +25,11 @@ services:
     image: mongo
     restart: always
     volumes:
-      - ./scripts/user_scripts:/docker-entrypoint-initdb.d
+      - ./scripts/db-init:/docker-entrypoint-initdb.d
     environment:
       MONGO_INITDB_DATABASE: admin
-      USER_MONGO_INITDB_ROOT_USERNAME: $USERDBROOTUSER
-      USER_MONGO_INITDB_ROOT_PASSWORD: $USERDBROOTPASSWORD
+      MONGO_INITDB_ROOT_USERNAME: $DBROOTUSER
+      MONGO_INITDB_ROOT_PASSWORD: $DBROOTPASSWORD
       USER_DBUSER: $USERDBUSER
       USER_DBPASSWORD: $USERDBPASSWORD
       USER_DBNAME: $USERDBNAME
@@ -49,11 +49,11 @@ services:
     image: mongo
     restart: always
     volumes:
-      - ./scripts/list_scripts:/docker-entrypoint-initdb.d
+      - ./scripts/db-init:/docker-entrypoint-initdb.d
     environment:
       MONGO_INITDB_DATABASE: admin
-      LIST_MONGO_INITDB_ROOT_USERNAME: $LISTDBROOTUSER
-      LIST_MONGO_INITDB_ROOT_PASSWORD: $LISTDBROOTPASSWORD
+      MONGO_INITDB_ROOT_USERNAME: $DBROOTUSER
+      MONGO_INITDB_ROOT_PASSWORD: $DBROOTPASSWORD
       LIST_DBUSER: $LISTDBUSER
       LIST_DBPASSWORD: $LISTDBPASSWORD
       LIST_DBNAME: $LISTDBNAME
@@ -73,14 +73,14 @@ services:
     image: mongo
     restart: always
     volumes:
-      - ./scripts/notification_scripts:/docker-entrypoint-initdb.d
+      - ./scripts/db-init:/docker-entrypoint-initdb.d
     environment:
       MONGO_INITDB_DATABASE: admin
-      NOTIF_MONGO_INITDB_ROOT_USERNAME: $NOTIFDBROOTUSER
-      NOTIF_MONGO_INITDB_ROOT_PASSWORD: $NOTIFDBROOTPASSWORD
-      NOTIF_DBUSER: $NOTIFDBUSER
-      NOTIF_DBPASSWORD: $NOTIFDBPASSWORD
-      NOTIF_DBNAME: $NOTIFDBNAME
+      MONGO_INITDB_ROOT_USERNAME: $DBROOTUSER
+      MONGO_INITDB_ROOT_PASSWORD: $DBROOTPASSWORD
+      NOTIFICATION_DBUSER: $NOTIFICATIONDBUSER
+      NOTIFICATION_DBPASSWORD: $NOTIFICATIONDBPASSWORD
+      NOTIFICATION_DBNAME: $NOTIFICATIONDBNAME
     networks:
       - orodha-network
 

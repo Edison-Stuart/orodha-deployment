@@ -1,5 +1,5 @@
-var rootDBUser = process.env["LIST_MONGO_INITDB_ROOT_USERNAME"];
-var rootDBPassword = process.env["LIST_MONGO_INITDB_ROOT_PASSWORD"];
+var rootDBUser = process.env["MONGO_INITDB_ROOT_USERNAME"];
+var rootDBPassword = process.env["MONGO_INITDB_ROOT_PASSWORD"];
 var dbPassword = process.env["LIST_DBPASSWORD"];
 var dbUser = process.env["LIST_DBUSER"];
 var dbName = process.env["LIST_DBNAME"];
