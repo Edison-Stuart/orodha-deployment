@@ -1,0 +1,89 @@
+version: "3"
+
+services:
+  orodha-gateway:
+    hostname: orodha-gateway
+    container_name: orodha-gateway
+    image: nginx:latest
+    volumes:
+      - ./config/gateway/conf.d:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+    networks:
+      - orodha-network
+
+  orodha-user-server:
+    hostname: user-service-server
+    container_name: user-service
+    image: edisonstuart/orodha-user-service:latest
+    networks:
+      - orodha-network
+
+  orodha-user-mongo:
+    hostname: user-service-mongo
+    container_name: user-service-mongo
+    image: mongo
+    restart: always
+    volumes:
+      - ./scripts/db-init:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_DATABASE: admin
+      MONGO_INITDB_ROOT_USERNAME: $DBROOTUSER
+      MONGO_INITDB_ROOT_PASSWORD: $DBROOTPASSWORD
+      USER_DBUSER: $USERDBUSER
+      USER_DBPASSWORD: $USERDBPASSWORD
+      USER_DBNAME: $USERDBNAME
+    networks:
+      - orodha-network
+
+  orodha-list-server:
+    hostname: list-service-server
+    container_name: list-service
+    image: edisonstuart/orodha-list-service:latest
+    networks:
+      - orodha-network
+
+  orodha-list-mongo:
+    hostname: list-service-mongo
+    container_name: list-service-mongo
+    image: mongo
+    restart: always
+    volumes:
+      - ./scripts/db-init:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_DATABASE: admin
+      MONGO_INITDB_ROOT_USERNAME: $DBROOTUSER
+      MONGO_INITDB_ROOT_PASSWORD: $DBROOTPASSWORD
+      LIST_DBUSER: $LISTDBUSER
+      LIST_DBPASSWORD: $LISTDBPASSWORD
+      LIST_DBNAME: $LISTDBNAME
+    networks:
+      - orodha-network
+
+  orodha-notification-server:
+    hostname: notification-service-server
+    container_name: notification-service
+    image: edisonstuart/orodha-notification-service:latest
+    networks:
+      - orodha-network
+
+  orodha-notification-mongo:
+    hostname: notification-service-mongo
+    container_name: notification-service-mongo
+    image: mongo
+    restart: always
+    volumes:
+      - ./scripts/db-init:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_DATABASE: admin
+      MONGO_INITDB_ROOT_USERNAME: $DBROOTUSER
+      MONGO_INITDB_ROOT_PASSWORD: $DBROOTPASSWORD
+      NOTIFICATION_DBUSER: $NOTIFICATIONDBUSER
+      NOTIFICATION_DBPASSWORD: $NOTIFICATIONDBPASSWORD
+      NOTIFICATION_DBNAME: $NOTIFICATIONDBNAME
+    networks:
+      - orodha-network
+
+networks:
+  orodha-network:
+    driver: bridge
