@@ -41,9 +41,8 @@ fi
 
 export TAG=edisonstuart/orodha-base-image-${LAUNCH_OPTION}/${BUILD_TAG}
 
+docker build --build-arg REQUIREMENTS_FILE=${LAUNCH_OPTION}-requirements.txt -t ${TAG} .
 
 docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
-docker build --build-arg REQUIREMENTS_FILE=${LAUNCH_OPTION}-requirements.txt -t ${TAG} .
 
 docker push $TAG
