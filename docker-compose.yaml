@@ -5,12 +5,45 @@ services:
     hostname: orodha-gateway
     container_name: orodha-gateway
     image: nginx:latest
+    restart: on-failure
     volumes:
       - ./config/gateway/conf.d:/etc/nginx/conf.d
     ports:
       - "80:80"
     networks:
       - orodha-network
+
+  postgres:
+    image: postgres:13.2
+    restart: unless-stopped
+    hostname: keycloak-db
+    container_name: keycloak-db
+    environment:
+      POSTGRES_DB: ${POSTGRESQL_DB}
+      POSTGRES_USER: ${POSTGRESQL_USER}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASS}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - orodha-network
+
+  keycloak:
+    image: jboss/keycloak
+    restart: on-failure
+    environment:
+      KC_HOSTNAME: ${KC_HOSTNAME}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      DB_VENDOR: postgres
+      DB_USER: ${POSTGRESQL_USER}
+      DB_PASSWORD: ${POSTGRESQL_PASS}
+      DB_ADDR: keycloak-db
+      DB_DATABASE: keycloakdb
+      PROXY_ADDRESS_FORWARDING: "true"
+    # ports:
+    #   - "8080:8080"
+    depends_on:
+      - postgres
 
   orodha-user-server:
     hostname: user-service-server
@@ -83,6 +116,10 @@ services:
       NOTIFICATION_DBNAME: $NOTIFICATIONDBNAME
     networks:
       - orodha-network
+
+volumes:
+  postgres_data:
+    external: false
 
 networks:
   orodha-network:
