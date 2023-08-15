@@ -46,7 +46,6 @@ services:
     networks:
       - orodha-network
 
-
   mongo:
     hostname: orodha-mongo
     container_name: orodha-mongo
@@ -56,17 +55,17 @@ services:
       - ./scripts/db-init:/docker-entrypoint-initdb.d
     environment:
       MONGO_INITDB_DATABASE: admin
-      MONGO_INITDB_ROOT_USERNAME: $DBROOTUSER
-      MONGO_INITDB_ROOT_PASSWORD: $DBROOTPASSWORD
-      USER_DBUSER: $USERDBUSER
-      USER_DBPASSWORD: $USERDBPASSWORD
-      USER_DBNAME: $USERDBNAME
-      LIST_DBUSER: $LISTDBUSER
-      LIST_DBPASSWORD: $LISTDBPASSWORD
-      LIST_DBNAME: $LISTDBNAME
-      NOTIFICAITON_DBUSER: $NOTIFICATIONDBUSER
-      NOTIFICATION_DBPASSWORD: $NOTIFICATIONDBPASSWORD
-      NOTIFICATION_DBNAME: $NOTIFICATIONDBNAME
+      MONGO_INITDB_ROOT_USERNAME: $DB_ROOT_USER
+      MONGO_INITDB_ROOT_PASSWORD: $DB_ROOT_PASSWORD
+      USER_DBUSER: $USER_DB_USER
+      USER_DBPASSWORD: $USER_DB_PASSWORD
+      USER_DBNAME: $USER_DB_NAME
+      LIST_DBUSER: $LIST_DB_USER
+      LIST_DBPASSWORD: $LIST_DB_PASSWORD
+      LIST_DBNAME: $LIST_DB_NAME
+      NOTIFICAITON_DBUSER: $NOTIFICATION_DB_USER
+      NOTIFICATION_DBPASSWORD: $NOTIFICATION_DB_PASSWORD
+      NOTIFICATION_DBNAME: $NOTIFICATION_DB_NAME
     networks:
       - orodha-network
 
@@ -90,7 +89,6 @@ services:
     image: edisonstuart/orodha-user-service:latest
     networks:
       - orodha-network
-
 
 volumes:
   postgres_data:
