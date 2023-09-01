@@ -87,6 +87,8 @@ services:
     hostname: user-service-server
     container_name: user-service
     image: edisonstuart/orodha-user-service:latest
+    volumes:
+      - ./orodha-keycloak:/orodha-keycloak
     networks:
       - orodha-network
 
