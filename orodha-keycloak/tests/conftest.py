@@ -4,6 +4,7 @@ lieu of using the python-keycloak package to connect to our server.
 """
 import pytest
 from unittest.mock import MagicMock
+from unittest.mock import mo
 
 
 @pytest.fixture
@@ -37,3 +38,11 @@ def mock_create_admin_connection(MockKeycloakOpenIDConnection, **kwargs):
     )
 
     return keycloak_connection
+
+
+@pytest.fixture
+def mock_keycloak_connection(mock):
+    mock.patch(
+        "orodha_keycloak.connection.KeycloakConnection",
+        return_value=MockKeycloakConnection(**TEST_CONNECTION_ARGS)
+    )

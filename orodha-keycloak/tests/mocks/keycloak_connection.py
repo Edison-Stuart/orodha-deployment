@@ -5,11 +5,10 @@ interacting with the python-keycloak package without having a live connection.
 import unittest.mock
 
 
-class KeycloakConnection(unittest.mock.MagicMock):
+class MockKeycloakConnection(unittest.mock.MagicMock):
     """
     A mock class for testing that our functions are called with correct values.
     """
-
     def __init__(self, mock_create_admin_connection):
         self.connection = mock_create_admin_connection()
         super().__init__(self)
@@ -18,14 +17,14 @@ class KeycloakConnection(unittest.mock.MagicMock):
         try:
             new_user = self.connection.create_user(
                 {
-                    "email": user_info["email"],
-                    "username": user_info["username"],
+                    "email": user_info.get("email"),
+                    "username": user_info.get("username"),
                     "enabled": True,
-                    "firstName": user_info["firstName"],
-                    "lastName": user_info["lastName"],
+                    "firstName": user_info.get("firstName"),
+                    "lastName": user_info.get("lastName"),
                     "credentials": [
                         {
-                            "value": user_info["password"],
+                            "value": user_info.get("password"),
                             "type": "password",
                         }
                     ],

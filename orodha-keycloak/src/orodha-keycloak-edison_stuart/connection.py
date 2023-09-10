@@ -51,25 +51,23 @@ class KeycloakConnection():
             new_user: The new user info genereated by the keycloak server.
 
         """
-        try:
-            new_user = self.connection.create_user(
-                {
-                    "email": user_info["email"],
-                    "username": user_info["username"],
-                    "enabled": True,
-                    "firstName": user_info["firstName"],
-                    "lastName": user_info["lastName"],
-                    "credentials": [
-                        {
-                            "value": user_info["password"],
-                            "type": "password",
-                        }
-                    ],
-                },
-                exist_ok=False
-            )
-        except Exception as exception:
-            raise Exception from exception
+        new_user = self.connection.create_user(
+            {
+                "email": user_info.get("email"),
+                "username": user_info.get("username"),
+                "enabled": True,
+                "firstName": user_info.get("firstName"),
+                "lastName": user_info.get("lastName"),
+                "credentials": [
+                    {
+                        "value": user_info.get("password"),
+                        "type": "password",
+                    }
+                ],
+            },
+            exist_ok=False
+        )
+
 
         return new_user
 
