@@ -2,7 +2,7 @@
 This Module contains the KeycloakConnection class which is a facade
 used to interact with a keycloak server via python-keycloak.
 """
-from .connections import create_admin_connection
+from .connections import create_admin_connection, create_client_connection
 
 
 class KeycloakConnection():

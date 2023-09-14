@@ -3,22 +3,8 @@ This Module contains a function which provides a keycloak connection
 set up as an admin for our main class.
 """
 from keycloak import KeycloakAdmin, KeycloakOpenIDConnection
-
-class InvalidConnectionException(Exception):
-    """
-    Exception for when connection arguments are missing or invalid
-
-    Args:
-        missing_args(list[str]): A list of the missing argument keys.
-        message(str): An optional message to be displayed when raised.
-    """
-    def __init__(self, missing_args:list, message:str=None):
-        if message is None:
-            message = "Missing connection args:"
-            for arg in missing_args:
-                message.append(" "+arg)
-            super().__init__(message)
-        self.message = message
+from . import ADMIN_ARG_LIST
+from connections import InvalidConnectionException
 
 
 def create_admin_connection(**kwargs):
@@ -40,17 +26,10 @@ def create_admin_connection(**kwargs):
     Returns:
         keycloak_admin: This object is what holds our connection to the keycloak admin, through this
             we are able to manipulate users and other data depending on the keycloak permissions.
-	"""
-    arg_list = [
-			"server_url",
-			"username",
-			"password",
-			"realm_name",
-			"client_id",
-			"client_secret_key"
-			]
-    if list(kwargs.keys()) != arg_list:
-        missing_args = [arg for arg in arg_list if arg not in list(kwargs.keys())]
+        """
+    if list(kwargs.keys()) != ADMIN_ARG_LIST:
+        missing_args = [
+            arg for arg in ADMIN_ARG_LIST if arg not in list(kwargs.keys())]
         raise InvalidConnectionException(missing_args=missing_args)
 
     keycloak_connection = KeycloakOpenIDConnection(

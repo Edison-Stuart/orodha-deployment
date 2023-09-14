@@ -1,5 +1,5 @@
 import pytest
-from ..src.orodha_keycloak_edison_stuart import KeycloakConnection
+from src.orodha_keycloak_edison_stuart import KeycloakConnection
 from .fixtures import MOCK_DATA
 
 
