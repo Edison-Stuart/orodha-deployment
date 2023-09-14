@@ -3,8 +3,16 @@ This Module contains a function which provides a keycloak connection
 set up as an admin for our main class.
 """
 from keycloak import KeycloakAdmin, KeycloakOpenIDConnection
-from . import ADMIN_ARG_LIST
-from connections import InvalidConnectionException
+from orodha_keycloak.connections.exceptions import InvalidConnectionException
+
+ADMIN_ARG_LIST = [
+    "server_url",
+    "username",
+    "password",
+    "realm_name",
+    "client_id",
+    "client_secret_key",
+]
 
 
 def create_admin_connection(**kwargs):
@@ -26,10 +34,9 @@ def create_admin_connection(**kwargs):
     Returns:
         keycloak_admin: This object is what holds our connection to the keycloak admin, through this
             we are able to manipulate users and other data depending on the keycloak permissions.
-        """
+    """
     if list(kwargs.keys()) != ADMIN_ARG_LIST:
-        missing_args = [
-            arg for arg in ADMIN_ARG_LIST if arg not in list(kwargs.keys())]
+        missing_args = [arg for arg in ADMIN_ARG_LIST if arg not in list(kwargs.keys())]
         raise InvalidConnectionException(missing_args=missing_args)
 
     keycloak_connection = KeycloakOpenIDConnection(
@@ -39,7 +46,7 @@ def create_admin_connection(**kwargs):
         realm_name=kwargs.get("realm_name"),
         client_id=kwargs.get("client_id"),
         client_secret_key=kwargs.get("client_secret_key"),
-        verify=True
+        verify=True,
     )
     keycloak_admin = KeycloakAdmin(connection=keycloak_connection)
     return keycloak_admin

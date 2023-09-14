@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "orodha-keycloak-edison_stuart"
+name = "orodha-keycloak"
 version = "0.0.1"
 authors = [
   { name="Edison Stuart", email="edisonstaurt@gmail.com" },

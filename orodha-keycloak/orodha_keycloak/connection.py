@@ -5,7 +5,7 @@ used to interact with a keycloak server via python-keycloak.
 from .connections import create_admin_connection, create_client_connection
 
 
-class KeycloakConnection():
+class KeycloakConnection:
     """
         Facade class used for connecting to, and interacting with keycloak for the Orodha
     shopping list app.
@@ -62,7 +62,7 @@ class KeycloakConnection():
                     }
                 ],
             },
-            exist_ok=False
+            exist_ok=False,
         )
 
         return new_user

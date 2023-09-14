@@ -1,11 +1,11 @@
 import pytest
-from src.orodha_keycloak_edison_stuart import KeycloakConnection
-from .fixtures import MOCK_DATA
+from orodha_keycloak.connection import KeycloakConnection
+from tests.fixtures.keycloak import MOCK_DATA
 
 
 def test_create_user():
     connection = KeycloakConnection()
-    response = connection.create_user(*MOCK_DATA.get('create_user_request'))
+    response = connection.create_user(*MOCK_DATA.get("create_user_request"))
     assert response == MOCK_DATA.get("create_user_response")
 
 

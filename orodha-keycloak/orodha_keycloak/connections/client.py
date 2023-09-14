@@ -1,6 +1,7 @@
 from keycloak import KeycloakOpenID
-from . import CLIENT_ARG_LIST
-from exceptions import InvalidConnectionException
+from orodha_keycloak.connections.exceptions import InvalidConnectionException
+
+CLIENT_ARG_LIST = ["server_url", "realm_name", "client_id", "client_secret_key"]
 
 
 def create_client_connection(**kwargs):
@@ -22,17 +23,18 @@ def create_client_connection(**kwargs):
     Returns:
         keycloak_admin: This object is what holds our connection to the keycloak admin, through this
             we are able to manipulate users and other data depending on the keycloak permissions.
-        """
+    """
     if list(kwargs.keys()) != CLIENT_ARG_LIST:
         missing_args = [
-            arg for arg in CLIENT_ARG_LIST if arg not in list(kwargs.keys())]
+            arg for arg in CLIENT_ARG_LIST if arg not in list(kwargs.keys())
+        ]
         raise InvalidConnectionException(missing_args=missing_args)
 
     client_connection = KeycloakOpenID(
         server_url=kwargs.get("server_user"),
         client_id=kwargs.get("client_id"),
         client_secret_key=kwargs.get("client_secret_key"),
-        verify=True
+        verify=True,
     )
     return client_connection
 
@@ -51,10 +53,13 @@ print(token_info)
 
 
 def decode_jwt(token):
-    KEYCLOAK_PUBLIC_KEY = "-----BEGIN PUBLIC KEY-----\n" + \
-        keycloak_openid.public_key() + "\n-----END PUBLIC KEY-----"
-    options = {"verify_signature": True,
-               "verify_aud": True, "verify_exp": True}
+    KEYCLOAK_PUBLIC_KEY = (
+        "-----BEGIN PUBLIC KEY-----\n"
+        + keycloak_openid.public_key()
+        + "\n-----END PUBLIC KEY-----"
+    )
+    options = {"verify_signature": True, "verify_aud": True, "verify_exp": True}
     token_info = keycloak_openid.decode_token(
-        token['access_token'], key=KEYCLOAK_PUBLIC_KEY, options=options)
+        token["access_token"], key=KEYCLOAK_PUBLIC_KEY, options=options
+    )
     return token_info

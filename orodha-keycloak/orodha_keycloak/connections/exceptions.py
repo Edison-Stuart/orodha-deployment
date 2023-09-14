@@ -11,6 +11,6 @@ class InvalidConnectionException(Exception):
         if message is None:
             message = "Missing connection args:"
             for arg in missing_args:
-                message.append(" "+arg)
+                message += f" {arg}"
             super().__init__(message)
         self.message = message

@@ -4,11 +4,10 @@ our KeycloakConnection in lieu of using the python-keycloak package to connect t
 """
 from unittest.mock import MagicMock
 import pytest
-from fixtures import MOCK_DATA
+from tests.fixtures.keycloak import MOCK_DATA
 
 
 class MockKeycloakAdmin(MagicMock):
-
     def __init__(self, **kwargs):
         self.argumetns = dict(kwargs)
         super().__init__(self)
@@ -24,5 +23,5 @@ class MockKeycloakAdmin(MagicMock):
 def mock_create_admin_connection(mocker):
     mocker.patch(
         "src.orodha_keycloak.connections.create_admin_connection",
-        return_value=MockKeycloakAdmin
+        return_value=MockKeycloakAdmin,
     )
