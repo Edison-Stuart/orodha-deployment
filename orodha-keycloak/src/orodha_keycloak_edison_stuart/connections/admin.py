@@ -54,12 +54,12 @@ def create_admin_connection(**kwargs):
         raise InvalidConnectionException(missing_args=missing_args)
 
     keycloak_connection = KeycloakOpenIDConnection(
-        server_url=kwargs["server_user"],
-        username=kwargs["username"],
-        password=kwargs["password"],
-        realm_name=kwargs["realm_name"],
-        client_id=kwargs["client_id"],
-        client_secret_key=kwargs["client_secret_key"],
+        server_url=kwargs.get("server_user"),
+        username=kwargs.get("username"),
+        password=kwargs.get("password"),
+        realm_name=kwargs.get("realm_name"),
+        client_id=kwargs.get("client_id"),
+        client_secret_key=kwargs.get("client_secret_key"),
         verify=True
     )
     keycloak_admin = KeycloakAdmin(connection=keycloak_connection)

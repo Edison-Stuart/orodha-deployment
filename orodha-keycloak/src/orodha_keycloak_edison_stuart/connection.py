@@ -2,7 +2,8 @@
 This Module contains the KeycloakConnection class which is a facade
 used to interact with a keycloak server via python-keycloak.
 """
-from .connections import create_admin_connection, InvalidConnectionException
+from .connections import create_admin_connection
+
 
 class KeycloakConnection():
     """
@@ -12,25 +13,21 @@ class KeycloakConnection():
     Args:
         connection_kwargs:
             server_user: User that has admin priveleges on the server.
-		    username: The username of the server_user.
-		    password: The password of the server_user.
-		    realm_name: The name of the keycloak realm that we are attempting to access.
-		    client_id: The keycloak client_id that we are using for the connection.
-		    client_secret_key: The secret key of the keycloak client.
+                    username: The username of the server_user.
+                    password: The password of the server_user.
+                    realm_name: The name of the keycloak realm that we are attempting to access.
+                    client_id: The keycloak client_id that we are using for the connection.
+                    client_secret_key: The secret key of the keycloak client.
 
     Raises:
         InvalidConnectionException: If the connection variables given are invalid
             and do not allow connection.
     """
+
     def __init__(self, **connection_kwargs):
-        try:
-            args = list(connection_kwargs)
-            connection = create_admin_connection(*args)
-            self.connection = connection
-        except InvalidConnectionException as exception:
-            raise InvalidConnectionException from exception
-        except Exception as exception:
-            raise Exception from exception
+        args = list(connection_kwargs)
+        connection = create_admin_connection(*args)
+        self.connection = connection
 
     def add_user(self, **user_info):
         """
@@ -68,7 +65,6 @@ class KeycloakConnection():
             exist_ok=False
         )
 
-
         return new_user
 
     def delete_keycloak_user(self, user_id):
@@ -78,16 +74,10 @@ class KeycloakConnection():
         Args:
             user_id: The user id of the user to be deleted.
 
-        Raises:
-            Exception: If python-keycloak throws an exception we just re-raise it.
-
         Returns:
             response: The response from the keycloak server with info about the deletion.
         """
-        try:
-            response = self.connection.delete_user(user_id=user_id)
-        except Exception as exception:
-            raise Exception from exception
+        response = self.connection.delete_user(user_id=user_id)
 
         return response
 
@@ -108,13 +98,9 @@ class KeycloakConnection():
         Returns:
             user: The user, if any, that is associated with this user_identification value.
         """
-        try:
-            if user_id:
-                user = self.connection.get_user(user_identification)
-            else:
-                user = self.connection.get_user_id(user_identification)
-        except Exception as exception:
-            raise Exception from exception
+        if user_id:
+            user = self.connection.get_user(user_identification)
+        else:
+            user = self.connection.get_user_id(user_identification)
 
         return user
-                
