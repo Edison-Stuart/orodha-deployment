@@ -1,3 +1,6 @@
+"""
+This module contains custom exceptions for the orodha keycloak package.
+"""
 class InvalidConnectionException(Exception):
     """
     Exception for when connection arguments are missing or invalid
