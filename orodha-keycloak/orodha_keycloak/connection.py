@@ -27,12 +27,11 @@ class KeycloakConnection:
 
     def __init__(self, **connection_kwargs):
         args = {key: value for key, value in connection_kwargs.items()}
-        # client_connection = create_client_connection(args)
-        admin_connection = orodha_keycloak.connections.admin.create_admin_connection(args)
-        client_connection = orodha_keycloak.connections.client.create_client_connection(args)
 
-        self.admin_connection = admin_connection
-        self.client_connection = client_connection
+        self.admin_connection = orodha_keycloak.connections.admin.create_admin_connection(
+            args)
+        self.client_connection = orodha_keycloak.connections.client.create_client_connection(
+            args)
 
     def add_user(self, **user_info):
         """
@@ -83,7 +82,7 @@ class KeycloakConnection:
 
         return response
 
-    def check_if_user_exists(self, user_identification, is_token=False):
+    def get_user_from_access_token(self, user_identification, is_token=False):
         """
         Takes either a user_id or username and checks if a certain user exists.
 
@@ -98,7 +97,7 @@ class KeycloakConnection:
             user: The user, if any, that is associated with this user_identification value.
         """
 
-        #NOTE: This function will be changed to return only relevant information from the decoded
+        # NOTE: This function will be changed to return only relevant information from the decoded
         #   token once I determine the "shape" of the response data.
         if is_token:
             return_value = self._decode_jwt(user_identification)
@@ -125,5 +124,6 @@ class KeycloakConnection:
             "verify_exp": True
         }
         token_info = self.client_connection.decode_token(
-            token['access_token'], key=keycloak_public_key, options=options)
+            token,
+            key=keycloak_public_key, options=options)
         return token_info
