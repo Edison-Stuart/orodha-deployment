@@ -1,101 +1,99 @@
 version: "3"
 
 services:
-  orodha-gateway:
-    hostname: orodha-gateway
-    container_name: orodha-gateway
-    image: nginx:latest
-    restart: on-failure
-    volumes:
-      - ./config/gateway/conf.d:/etc/nginx/conf.d
-    ports:
-      - "80:80"
-    networks:
-      - orodha-network
+    orodha-gateway:
+        hostname: orodha-gateway
+        container_name: orodha-gateway
+        image: nginx:latest
+        restart: on-failure
+        volumes:
+            - ./config/gateway/conf.d:/etc/nginx/conf.d
+        ports:
+            - "80:80"
+        networks:
+            - orodha-network
 
-  postgres:
-    image: postgres:13.2
-    restart: unless-stopped
-    hostname: keycloak-db
-    container_name: keycloak-db
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - orodha-network
+    postgres:
+        image: postgres:13.2
+        restart: unless-stopped
+        hostname: keycloak-db
+        container_name: keycloak-db
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        networks:
+            - orodha-network
 
-  keycloak:
-    image: jboss/keycloak
-    restart: on-failure
-    environment:
-      KEYCLOAK_HOSTNAME: ${KEYCLOAK_HOSTNAME}
-      KEYCLOAK_USER: ${KEYCLOAK_USER}
-      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
-      DB_VENDOR: postgres
-      DB_USER: ${POSTGRES_USER}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
-      DB_ADDR: keycloak-db
-      DB_DATABASE: keycloakdb
-      PROXY_ADDRESS_FORWARDING: "true"
+    keycloak:
+        image: jboss/keycloak
+        restart: on-failure
+        environment:
+            KEYCLOAK_HOSTNAME: ${KEYCLOAK_HOSTNAME}
+            KEYCLOAK_USER: ${KEYCLOAK_USER}
+            KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+            DB_VENDOR: postgres
+            DB_USER: ${POSTGRES_USER}
+            DB_PASSWORD: ${POSTGRES_PASSWORD}
+            DB_ADDR: keycloak-db
+            DB_DATABASE: keycloakdb
+            PROXY_ADDRESS_FORWARDING: "true"
 
-    depends_on:
-      - postgres
-    networks:
-      - orodha-network
+        depends_on:
+            - postgres
+        networks:
+            - orodha-network
 
-  mongo:
-    hostname: orodha-mongo
-    container_name: orodha-mongo
-    image: mongo
-    restart: always
-    volumes:
-      - ./scripts/db-init:/docker-entrypoint-initdb.d
-    environment:
-      MONGO_INITDB_DATABASE: admin
-      MONGO_INITDB_ROOT_USERNAME: $DB_ROOT_USER
-      MONGO_INITDB_ROOT_PASSWORD: $DB_ROOT_PASSWORD
-      USER_DBUSER: $USER_DBUSER
-      USER_DBPASSWORD: $USER_DBPASSWORD
-      USER_DBNAME: $USER_DBNAME
-      LIST_DBUSER: $LIST_DBUSER
-      LIST_DBPASSWORD: $LIST_DBPASSWORD
-      LIST_DBNAME: $LIST_DBNAME
-      NOTIFICAITON_DBUSER: $NOTIFICATION_DBUSER
-      NOTIFICATION_DBPASSWORD: $NOTIFICATION_DBPASSWORD
-      NOTIFICATION_DBNAME: $NOTIFICATION_DBNAME
-    networks:
-      - orodha-network
+    mongo:
+        hostname: orodha-mongo
+        container_name: orodha-mongo
+        image: mongo
+        restart: always
+        volumes:
+            - ./scripts/db-init:/docker-entrypoint-initdb.d
+        environment:
+            MONGO_INITDB_DATABASE: admin
+            MONGO_INITDB_ROOT_USERNAME: $DB_ROOT_USER
+            MONGO_INITDB_ROOT_PASSWORD: $DB_ROOT_PASSWORD
+            USER_DBUSER: $USER_DBUSER
+            USER_DBPASSWORD: $USER_DBPASSWORD
+            USER_DBNAME: $USER_DBNAME
+            LIST_DBUSER: $LIST_DBUSER
+            LIST_DBPASSWORD: $LIST_DBPASSWORD
+            LIST_DBNAME: $LIST_DBNAME
+            NOTIFICAITON_DBUSER: $NOTIFICATION_DBUSER
+            NOTIFICATION_DBPASSWORD: $NOTIFICATION_DBPASSWORD
+            NOTIFICATION_DBNAME: $NOTIFICATION_DBNAME
+        networks:
+            - orodha-network
 
-  orodha-list-server:
-    hostname: list-service-server
-    container_name: list-service
-    image: edisonstuart/orodha-list-service:latest
-    networks:
-      - orodha-network
+    orodha-list-server:
+        hostname: list-service-server
+        container_name: list-service
+        image: edisonstuart/orodha-list-service:latest
+        networks:
+            - orodha-network
 
-  orodha-notification-server:
-    hostname: notification-service-server
-    container_name: notification-service
-    image: edisonstuart/orodha-notification-service:latest
-    networks:
-      - orodha-network
+    orodha-notification-server:
+        hostname: notification-service-server
+        container_name: notification-service
+        image: edisonstuart/orodha-notification-service:latest
+        networks:
+            - orodha-network
 
-  orodha-user-server:
-    hostname: user-service-server
-    container_name: user-service
-    image: edisonstuart/orodha-user-service:latest
-    volumes:
-      - ./orodha-keycloak:/orodha-keycloak
-    networks:
-      - orodha-network
+    orodha-user-server:
+        hostname: user-service-server
+        container_name: user-service
+        image: edisonstuart/orodha-user-service:latest
+        networks:
+            - orodha-network
 
 volumes:
-  postgres_data:
-    external: false
+    postgres_data:
+        external: true
 
 networks:
-  orodha-network:
-    driver: bridge
+    orodha-network:
+        driver: bridge

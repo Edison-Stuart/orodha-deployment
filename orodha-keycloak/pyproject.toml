@@ -4,11 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "orodha-keycloak"
-version = "0.0.1"
+version = "0.5"
+dependencies = [
+'python-keycloak>=3.3.0',
+]
 authors = [
   { name="Edison Stuart", email="edisonstaurt@gmail.com" },
 ]
-description = "A facade package used to preform required keycloak actions which will be made available throughout each Orodha service."
+description = "A facade package used to perform required keycloak actions which will be made available throughout each Orodha service."
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [

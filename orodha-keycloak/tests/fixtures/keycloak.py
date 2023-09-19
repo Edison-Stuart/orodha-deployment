@@ -24,7 +24,7 @@ MOCK_DATA = {
         },
     "connection_args":
         {
-            "server_url": "someurl",
+            "server_url": "someurl/",
             "username": "someusername",
             "password": "somepassword",
             "realm_name": "somerealm",

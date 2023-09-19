@@ -1,6 +1,6 @@
 """
 This module contains two fixtures which supply our mock admin connections to
-our KeycloakConnection in lieu of using the python-keycloak package to connect to our server.
+our OrodhaKeycloakClient in lieu of using the python-keycloak package to connect to our server.
 """
 from unittest.mock import MagicMock
 import pytest

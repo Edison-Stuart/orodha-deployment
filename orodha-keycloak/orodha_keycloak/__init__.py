@@ -1,1 +1,1 @@
-from .connection import KeycloakConnection
+from .connection import OrodhaKeycloakClient
