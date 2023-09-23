@@ -118,7 +118,7 @@ class OrodhaKeycloakClient:
 
         return response
 
-    def get_user(self, token: dict = None, user_id: str = None):
+    def get_user(self, token: str = None, user_id: str = None):
         """
         Takes either a user_id or a token and returns the user if they exist.
 
@@ -143,7 +143,7 @@ class OrodhaKeycloakClient:
         Small helper function which decodes a JWT token using the client connection.
 
         Args:
-            token(dict): A JWT token that we get from keycloak.
+            token(str): A JWT token that we get from keycloak.
 
         Returns:
             token_info(dict): The decoded information from the token.
@@ -156,7 +156,7 @@ class OrodhaKeycloakClient:
             "verify_exp": True
         }
         token_info = self.client_connection.decode_token(
-            token['access_token'],
+            token,
             key=keycloak_public_key,
             options=options)
         return token_info
