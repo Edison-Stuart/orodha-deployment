@@ -1,6 +1,6 @@
 # Orodha-Keycloak
 
-This package is a facade interfacing with [python-keycloak](https://python-keycloak.readthedocs.io/en/latest/) used by
+[This package](https://github.com/Edison-Stuart/orodha-deployment/tree/main/orodha-keycloak) is a facade interfacing with [python-keycloak](https://python-keycloak.readthedocs.io/en/latest/) used by
 Orodha services in order to make requests to a keycloak server.
 
 ## Requirements
