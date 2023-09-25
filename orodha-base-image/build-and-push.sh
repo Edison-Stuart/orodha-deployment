@@ -39,7 +39,7 @@ if [ -z "$DOCKER_PASSWORD" ];
 	exit 1
 fi
 
-export TAG=edisonstuart/orodha-base-image-${LAUNCH_OPTION}/${BUILD_TAG}
+export TAG=edisonstuart/orodha-base-image-${LAUNCH_OPTION}:${BUILD_TAG}
 
 docker build --build-arg REQUIREMENTS_FILE=${LAUNCH_OPTION}-requirements.txt -t ${TAG} .
 
