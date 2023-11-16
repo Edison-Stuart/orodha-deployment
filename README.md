@@ -33,7 +33,7 @@ You can feed these variables in by using the --env-file flag on the docker-compo
 The orodha-base-image folder contains a Dockerfile, a script called
 `build-and-push.sh`, and two separate requirements.txt files.
 
-The Dockerfile outlines an image that comes from python:3.11.4-alpine3.18 and simply sets up the environment for the greatest common denominater requirements for each of our flask-restx services.
+The Dockerfile outlines an image that comes from python:3.11.4-alpine3.18 and simply sets up the environment for the greatest common denominator requirements for each of our flask-restx services.
 
 You can use the --build-arg flag with the docker build command in order to set which requirements.txt file is used to build the base. This way, in our CI/CD pipeline we can pull our image built with the dev-requirements.txt, called `edisonstuart/orodha-base-image-dev/{tag}`, in order to test that everything is working as intended; then, pull our image that has been built with the prod-requirements.txt file, called `edisonstuart/orodha-base-image-prod/{tag}`, that we eventually will be pushing to AWS.
 
