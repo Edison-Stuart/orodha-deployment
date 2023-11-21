@@ -1,8 +1,99 @@
+import os
 import pytest
-import orodha_keycloak.connection
+from orodha_keycloak import OrodhaKeycloakClient, OrodhaCredentials
+from orodha_keycloak.exceptions import InvalidConnectionException
 from tests.fixtures.keycloak import MOCK_DATA
 
 CONNECTION_ARGS = MOCK_DATA.get("connection_args")
+
+
+def test_kwarg_credentials_with_password(clear_test_environment):
+    credentials = OrodhaCredentials(
+        server_url=CONNECTION_ARGS["server_url"],
+        realm_name=CONNECTION_ARGS["realm_name"],
+        client_id=CONNECTION_ARGS["client_id"],
+        password=CONNECTION_ARGS["password"],
+        username=CONNECTION_ARGS["username"],
+    )
+
+    assert credentials.server_url == CONNECTION_ARGS["server_url"]
+    assert credentials.realm_name == CONNECTION_ARGS["realm_name"]
+    assert credentials.client_id == CONNECTION_ARGS["client_id"]
+    assert credentials.username == CONNECTION_ARGS["username"]
+    assert credentials.password == CONNECTION_ARGS["password"]
+    assert credentials.secret_key_available is False
+
+
+def test_kwarg_credentials_with_secret_key(clear_test_environment):
+    credentials = OrodhaCredentials(
+        server_url=CONNECTION_ARGS["server_url"],
+        realm_name=CONNECTION_ARGS["realm_name"],
+        client_id=CONNECTION_ARGS["client_id"],
+        client_secret_key=CONNECTION_ARGS["client_secret_key"]
+    )
+
+    assert credentials.server_url == CONNECTION_ARGS["server_url"]
+    assert credentials.realm_name == CONNECTION_ARGS["realm_name"]
+    assert credentials.client_id == CONNECTION_ARGS["client_id"]
+    assert credentials.client_secret_key == CONNECTION_ARGS["client_secret_key"]
+    assert credentials.secret_key_available is True
+
+
+def test_environment_credentials_with_password(clear_test_environment):
+    arg_dict = {
+        "server_url": CONNECTION_ARGS["server_url"],
+        "realm_name": CONNECTION_ARGS["realm_name"],
+        "client_id": CONNECTION_ARGS["client_id"],
+        "username": CONNECTION_ARGS["username"],
+        "password": CONNECTION_ARGS["password"]
+    }
+    for key, value in arg_dict.items():
+        os.environ[key] = value
+
+    credentials = OrodhaCredentials()
+
+    assert credentials.server_url == CONNECTION_ARGS["server_url"]
+    assert credentials.realm_name == CONNECTION_ARGS["realm_name"]
+    assert credentials.client_id == CONNECTION_ARGS["client_id"]
+    assert credentials.username == CONNECTION_ARGS["username"]
+    assert credentials.password == CONNECTION_ARGS["password"]
+    assert credentials.secret_key_available is False
+
+
+def test_environment_credentials_with_secret_key(clear_test_environment):
+    arg_dict = {
+        "server_url": CONNECTION_ARGS["server_url"],
+        "realm_name": CONNECTION_ARGS["realm_name"],
+        "client_id": CONNECTION_ARGS["client_id"],
+        "client_secret_key": CONNECTION_ARGS["client_secret_key"]
+    }
+    for key, value in arg_dict.items():
+        os.environ[key] = value
+
+    credentials = OrodhaCredentials()
+
+    assert credentials.server_url == CONNECTION_ARGS["server_url"]
+    assert credentials.realm_name == CONNECTION_ARGS["realm_name"]
+    assert credentials.client_id == CONNECTION_ARGS["client_id"]
+    assert credentials.client_secret_key == CONNECTION_ARGS["client_secret_key"]
+    assert credentials.secret_key_available is True
+
+
+def test_credentials_missing_required_args(clear_test_environment):
+    with pytest.raises(InvalidConnectionException):
+        OrodhaCredentials(
+            client_id=CONNECTION_ARGS["client_id"],
+            client_secret_key=CONNECTION_ARGS["client_secret_key"]
+        )
+
+
+def test_credentials_no_credential_values(clear_test_environment):
+    with pytest.raises(InvalidConnectionException):
+        OrodhaCredentials(
+            server_url=CONNECTION_ARGS["server_url"],
+            realm_name=CONNECTION_ARGS["realm_name"],
+            client_id=CONNECTION_ARGS["client_id"],
+        )
 
 
 def test_add_user_with_secret_key(
@@ -11,7 +102,7 @@ def test_add_user_with_secret_key(
 ):
     user_request_args = MOCK_DATA.get("add_user_request")
 
-    connection = orodha_keycloak.connection.OrodhaKeycloakClient(
+    connection = OrodhaKeycloakClient(
         server_url=CONNECTION_ARGS["server_url"],
         realm_name=CONNECTION_ARGS["realm_name"],
         client_id=CONNECTION_ARGS["client_id"],
@@ -33,7 +124,7 @@ def test_add_user_with_password(
 ):
     user_request_args = MOCK_DATA.get("add_user_request")
 
-    connection = orodha_keycloak.connection.OrodhaKeycloakClient(
+    connection = OrodhaKeycloakClient(
         server_url=CONNECTION_ARGS["server_url"],
         realm_name=CONNECTION_ARGS["realm_name"],
         client_id=CONNECTION_ARGS["client_id"],
@@ -54,7 +145,7 @@ def test_delete_user(
     mock_create_admin_connection,
     mock_create_client_connection
 ):
-    connection = orodha_keycloak.connection.OrodhaKeycloakClient(
+    connection = OrodhaKeycloakClient(
         server_url=CONNECTION_ARGS["server_url"],
         username=CONNECTION_ARGS["username"],
         password=CONNECTION_ARGS["password"],
@@ -71,7 +162,7 @@ def test_get_user_with_token(
     mock_create_client_connection,
     mock_create_admin_connection
 ):
-    connection = orodha_keycloak.connection.OrodhaKeycloakClient(
+    connection = OrodhaKeycloakClient(
         server_url=CONNECTION_ARGS["server_url"],
         realm_name=CONNECTION_ARGS["realm_name"],
         client_id=CONNECTION_ARGS["client_id"],
@@ -86,7 +177,7 @@ def test_get_user_with_id(
     mock_create_client_connection,
     mock_create_admin_connection
 ):
-    connection = orodha_keycloak.connection.OrodhaKeycloakClient(
+    connection = OrodhaKeycloakClient(
         server_url=CONNECTION_ARGS["server_url"],
         username=CONNECTION_ARGS["username"],
         password=CONNECTION_ARGS["password"],

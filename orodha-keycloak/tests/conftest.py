@@ -2,7 +2,7 @@
 This module contains two fixtures which supply our mock admin connections to
 our OrodhaKeycloakClient in lieu of using the python-keycloak package to connect to our server.
 """
-from unittest.mock import MagicMock
+import os
 import pytest
 from tests.fixtures.keycloak import MOCK_DATA
 
@@ -35,6 +35,13 @@ class MockKeycloakClient:
 
     def decode_token(self, *args, **kwargs):
         return MOCK_DATA.get("mock_decoded_token")
+
+
+@pytest.fixture
+def clear_test_environment():
+    for key in MOCK_DATA["connection_args"].keys():
+        if os.environ.get(key) is not None:
+            os.environ.pop(key)
 
 
 @pytest.fixture

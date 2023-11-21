@@ -3,7 +3,6 @@ This Module contains a function which provides a keycloak connection
 set up as a non privileged user for our main class.
 """
 from keycloak import KeycloakOpenID
-from orodha_keycloak.connections.exceptions import InvalidConnectionException
 
 
 def create_client_connection(server_url: str, realm_name: str, client_id: str, client_secret_key: str):

@@ -2,14 +2,80 @@
 This Module contains the OrodhaKeycloakClient class which is a facade
 used to interact with a keycloak server via python-keycloak.
 """
+import os
 import orodha_keycloak.connections.admin
 import orodha_keycloak.connections.client
-from orodha_keycloak.connections.exceptions import InvalidConnectionException
+from orodha_keycloak.exceptions import InvalidConnectionException
+
+
+class OrodhaCredentials:
+    """
+    A class used to obtain and package credentials for the Orodha system.
+    If kwargs are not passed in, The credentials are pulled from the environment.
+
+    Args(as kwargs):
+        server_url(str): The url of the server that our keycloak is hosted at
+        realm_name(str): The name of the keycloak realm that we are attempting to access.
+        client_id(str): The keycloak client_id that we are using for the connection.
+        client_secret_key(str): The secret key of the keycloak client.
+        username(str) - Optional: The username of the user being impersonated by python-keycloak
+        password(str) - Optional: The password of the user being impersonated by python-keycloak
+
+    Raises:
+        InvalidConnectionException: If required arguments are not available
+            as kwargs or in the environment.
+    """
+
+    def __init__(self, **kwargs):
+        arg_dict = {
+            "server_url": kwargs.get("server_url"),
+            "realm_name": kwargs.get("realm_name"),
+            "client_id": kwargs.get("client_id"),
+            "client_secret_key": kwargs.get("client_secret_key"),
+            "username": kwargs.get("username"),
+            "password": kwargs.get("password")
+        }
+
+        for key, value in arg_dict.items():
+            if not value:
+                arg_dict[key] = os.environ.get(key)
+
+        required_args_available = arg_dict["server_url"] and arg_dict["realm_name"] and arg_dict["client_id"]
+        username_password_auth_available = arg_dict["username"] and arg_dict["password"]
+
+        if not required_args_available:
+            raise InvalidConnectionException(
+                ["server_url", "realm_name", "client_id"],
+                message="All required arguments must be made available as kwargs or" +
+                " in the environment."
+            )
+
+        self.server_url = arg_dict["server_url"]
+        self.realm_name = arg_dict["realm_name"]
+        self.client_id = arg_dict["client_id"]
+
+        if not arg_dict["client_secret_key"] and not username_password_auth_available:
+            raise InvalidConnectionException(
+                ["client_secret_key", "username", "password"],
+                message="client_secret_key or username and password " +
+                "must be made available in the environment"
+            )
+
+        if arg_dict["client_secret_key"]:
+            self.client_secret_key = arg_dict["client_secret_key"]
+            self.secret_key_available = True
+        else:
+            self.username = arg_dict["username"]
+            self.password = arg_dict["password"]
+            self.secret_key_available = False
+
+    def fart(self):
+        print("skeet")
 
 
 class OrodhaKeycloakClient:
     """
-        Facade class used for connecting to, and interacting with keycloak for the Orodha
+    Facade class used for connecting to, and interacting with keycloak for the Orodha
     shopping list app.
 
     Args:

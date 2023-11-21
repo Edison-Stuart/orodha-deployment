@@ -53,6 +53,11 @@ The current methods available on this class are:
 -   add_user: Adds a user to keycloak with a password.
 -   delete_user: Deletes a keycloak user with a given user_id.
 -   get_user: Takes either a user_id or a token and returns the user if they exist.
+
+```
+{'id': 'ddcbcb65-4515-4e72-8b0e-9e844cb7f06a', 'createdTimestamp': 1695143223350, 'username': 'demoadmin', 'enabled': True, 'totp': False, 'emailVerified': False, 'disableableCredentialTypes': [], 'requiredActions': [], 'notBefore': 0, 'access': {'manageGroupMembership': True, 'view': True, 'mapRoles': True, 'impersonate': True, 'manage': True}}
+```
+
 -   decode_jwt: Small helper function which decodes a JWT token using the client connection.
 
 but more may be added in future versions.
