@@ -69,9 +69,6 @@ class OrodhaCredentials:
             self.password = arg_dict["password"]
             self.secret_key_available = False
 
-    def fart(self):
-        print("skeet")
-
 
 class OrodhaKeycloakClient:
     """

@@ -3,8 +3,28 @@ This module contains two fixtures which supply our mock admin connections to
 our OrodhaKeycloakClient in lieu of using the python-keycloak package to connect to our server.
 """
 import os
+from copy import deepcopy
 import pytest
 from tests.fixtures.keycloak import MOCK_DATA
+
+
+class MockEnvironment:
+    def __init__(self, **kwargs):
+        self.old_env = deepcopy(os.environ)
+        self.new_env = deepcopy(os.environ)
+        self.new_env.update(kwargs)
+
+    def __enter__(self):
+        for key, value in self.new_env.items():
+            os.environ[key] = value
+
+    def __exit__(
+        self,
+        exception_type,
+        exception_value,
+        exception_traceback
+    ):
+        os.environ = self.old_env
 
 
 class MockKeycloakAdmin:
@@ -35,13 +55,6 @@ class MockKeycloakClient:
 
     def decode_token(self, *args, **kwargs):
         return MOCK_DATA.get("mock_decoded_token")
-
-
-@pytest.fixture
-def clear_test_environment():
-    for key in MOCK_DATA["connection_args"].keys():
-        if os.environ.get(key) is not None:
-            os.environ.pop(key)
 
 
 @pytest.fixture
