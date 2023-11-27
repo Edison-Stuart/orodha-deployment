@@ -16,7 +16,7 @@ class MockEnvironment:
 
     def __enter__(self):
         for key, value in self.new_env.items():
-            os.environ[key] = value
+            os.environ[key.upper()] = value
 
     def __exit__(
         self,

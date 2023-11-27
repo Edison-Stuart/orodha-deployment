@@ -14,12 +14,12 @@ class OrodhaCredentials:
     If kwargs are not passed in, The credentials are pulled from the environment.
 
     Args(as kwargs):
-        server_url(str): The url of the server that our keycloak is hosted at
-        realm_name(str): The name of the keycloak realm that we are attempting to access.
-        client_id(str): The keycloak client_id that we are using for the connection.
-        client_secret_key(str): The secret key of the keycloak client.
-        username(str) - Optional: The username of the user being impersonated by python-keycloak
-        password(str) - Optional: The password of the user being impersonated by python-keycloak
+        orodha_keycloak_client_server(str): The url of the server that our keycloak is hosted at
+        orodha_keycloak_realm_name(str): The name of the keycloak realm that we are attempting to access.
+        orodha_keycloak_client_id(str): The keycloak client_id that we are using for the connection.
+        orodha_keycloak_client_secret_key(str): The secret key of the keycloak client.
+        orodha_keycloak_username(str) - Optional: The username of the user being impersonated by python-keycloak
+        orodha_keycloak_password(str) - Optional: The password of the user being impersonated by python-keycloak
 
     Raises:
         InvalidConnectionException: If required arguments are not available
@@ -28,45 +28,52 @@ class OrodhaCredentials:
 
     def __init__(self, **kwargs):
         arg_dict = {
-            "server_url": kwargs.get("server_url"),
-            "realm_name": kwargs.get("realm_name"),
-            "client_id": kwargs.get("client_id"),
-            "client_secret_key": kwargs.get("client_secret_key"),
-            "username": kwargs.get("username"),
-            "password": kwargs.get("password")
+            "orodha_keycloak_client_server": kwargs.get("orodha_keycloak_client_server"),
+            "orodha_keycloak_realm_name": kwargs.get("orodha_keycloak_realm_name"),
+            "orodha_keycloak_client_id": kwargs.get("orodha_keycloak_client_id"),
+            "orodha_keycloak_client_secret_key": kwargs.get("orodha_keycloak_client_secret_key"),
+            "orodha_keycloak_username": kwargs.get("orodha_keycloak_username"),
+            "orodha_keycloak_password": kwargs.get("orodha_keycloak_password")
         }
 
         for key, value in arg_dict.items():
             if not value:
-                arg_dict[key] = os.environ.get(key)
+                arg_dict[key] = os.environ.get(key.upper())
 
-        required_args_available = arg_dict["server_url"] and arg_dict["realm_name"] and arg_dict["client_id"]
-        username_password_auth_available = arg_dict["username"] and arg_dict["password"]
+        required_args_available = arg_dict[
+            "orodha_keycloak_client_server"] and arg_dict[
+                "orodha_keycloak_realm_name"] and arg_dict["orodha_keycloak_client_id"]
+
+        username_password_auth_available = arg_dict[
+            "orodha_keycloak_username"] and arg_dict[
+                "orodha_keycloak_password"]
 
         if not required_args_available:
             raise InvalidConnectionException(
-                ["server_url", "realm_name", "client_id"],
+                ["orodha_keycloak_client_server",
+                    "orodha_keycloak_realm_name", "orodha_keycloak_client_id"],
                 message="All required arguments must be made available as kwargs or" +
                 " in the environment."
             )
 
-        self.server_url = arg_dict["server_url"]
-        self.realm_name = arg_dict["realm_name"]
-        self.client_id = arg_dict["client_id"]
+        self.server_url = arg_dict["orodha_keycloak_client_server"]
+        self.realm_name = arg_dict["orodha_keycloak_realm_name"]
+        self.client_id = arg_dict["orodha_keycloak_client_id"]
 
-        if not arg_dict["client_secret_key"] and not username_password_auth_available:
+        if not arg_dict["orodha_keycloak_client_secret_key"] and not username_password_auth_available:
             raise InvalidConnectionException(
-                ["client_secret_key", "username", "password"],
-                message="client_secret_key or username and password " +
+                ["orodha_keycloak_client_secret_key",
+                    "orodha_keycloak_username", "orodha_keycloak_password"],
+                message="orodha_keycloak_client_secret_key or orodha_keycloak_username and orodha_keycloak_password " +
                 "must be made available in the environment"
             )
 
-        if arg_dict["client_secret_key"]:
-            self.client_secret_key = arg_dict["client_secret_key"]
+        if arg_dict["orodha_keycloak_client_secret_key"]:
+            self.client_secret_key = arg_dict["orodha_keycloak_client_secret_key"]
             self.secret_key_available = True
         else:
-            self.username = arg_dict["username"]
-            self.password = arg_dict["password"]
+            self.username = arg_dict["orodha_keycloak_username"]
+            self.password = arg_dict["orodha_keycloak_password"]
             self.secret_key_available = False
 
 
