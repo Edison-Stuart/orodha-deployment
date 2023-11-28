@@ -4,7 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "orodha-keycloak"
-version = "1.0.1"
+version = "1.1.0"
+repository = "https://github.com/Edison-Stuart/orodha-deployment/tree/main/orodha-keycloak"
 dependencies = [
 'python-keycloak>=3.3.0',
 ]

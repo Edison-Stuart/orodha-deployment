@@ -3,7 +3,6 @@ This Module contains a function which provides a keycloak connection
 set up as an admin for our main class.
 """
 from keycloak import KeycloakAdmin, KeycloakOpenIDConnection
-from orodha_keycloak.connections.exceptions import InvalidConnectionException
 
 
 def create_admin_connection(

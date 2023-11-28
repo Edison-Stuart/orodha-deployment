@@ -2,9 +2,29 @@
 This module contains two fixtures which supply our mock admin connections to
 our OrodhaKeycloakClient in lieu of using the python-keycloak package to connect to our server.
 """
-from unittest.mock import MagicMock
+import os
+from copy import deepcopy
 import pytest
 from tests.fixtures.keycloak import MOCK_DATA
+
+
+class MockEnvironment:
+    def __init__(self, **kwargs):
+        self.old_env = deepcopy(os.environ)
+        self.new_env = deepcopy(os.environ)
+        self.new_env.update(kwargs)
+
+    def __enter__(self):
+        for key, value in self.new_env.items():
+            os.environ[key.upper()] = value
+
+    def __exit__(
+        self,
+        exception_type,
+        exception_value,
+        exception_traceback
+    ):
+        os.environ = self.old_env
 
 
 class MockKeycloakAdmin:

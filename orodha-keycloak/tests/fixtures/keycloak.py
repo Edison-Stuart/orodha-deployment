@@ -24,12 +24,12 @@ MOCK_DATA = {
         },
     "connection_args":
         {
-            "server_url": "someurl/",
-            "username": "someusername",
-            "password": "somepassword",
-            "realm_name": "somerealm",
-            "client_id": "clientID",
-            "client_secret_key": "secretkey",
+            "ORODHA_KEYCLOAK_CLIENT_SERVER": "someurl/",
+            "ORODHA_KEYCLOAK_REALM_NAME": "somerealm",
+            "ORODHA_KEYCLOAK_CLIENT_ID": "clientID",
+            "ORODHA_KEYCLOAK_CLIENT_SECRET_KEY": "secretkey",
+            "ORODHA_KEYCLOAK_USERNAME": "someusername",
+            "ORODHA_KEYCLOAK_PASSWORD": "somepassword",
         },
         "mock_public_key": "somemockpublickeyvalue",
         "mock_decoded_token": {"some_info": 100, "user_id": "some_user_id"},
