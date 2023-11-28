@@ -10,11 +10,11 @@ CONNECTION_ARGS = MOCK_DATA.get("connection_args")
 
 def test_kwarg_credentials_with_password():
     credentials = OrodhaCredentials(
-        orodha_keycloak_client_server=CONNECTION_ARGS["ORODHA_KEYCLOAK_CLIENT_SERVER"],
-        orodha_keycloak_realm_name=CONNECTION_ARGS["ORODHA_KEYCLOAK_REALM_NAME"],
-        orodha_keycloak_client_id=CONNECTION_ARGS["ORODHA_KEYCLOAK_CLIENT_ID"],
-        orodha_keycloak_username=CONNECTION_ARGS["ORODHA_KEYCLOAK_USERNAME"],
-        orodha_keycloak_password=CONNECTION_ARGS["ORODHA_KEYCLOAK_PASSWORD"],
+        client_server=CONNECTION_ARGS["ORODHA_KEYCLOAK_CLIENT_SERVER"],
+        realm_name=CONNECTION_ARGS["ORODHA_KEYCLOAK_REALM_NAME"],
+        client_id=CONNECTION_ARGS["ORODHA_KEYCLOAK_CLIENT_ID"],
+        username=CONNECTION_ARGS["ORODHA_KEYCLOAK_USERNAME"],
+        password=CONNECTION_ARGS["ORODHA_KEYCLOAK_PASSWORD"],
     )
 
     assert credentials.server_url == CONNECTION_ARGS["ORODHA_KEYCLOAK_CLIENT_SERVER"]
@@ -27,10 +27,10 @@ def test_kwarg_credentials_with_password():
 
 def test_kwarg_credentials_with_secret_key():
     credentials = OrodhaCredentials(
-        orodha_keycloak_client_server=CONNECTION_ARGS["ORODHA_KEYCLOAK_CLIENT_SERVER"],
-        orodha_keycloak_realm_name=CONNECTION_ARGS["ORODHA_KEYCLOAK_REALM_NAME"],
-        orodha_keycloak_client_id=CONNECTION_ARGS["ORODHA_KEYCLOAK_CLIENT_ID"],
-        orodha_keycloak_client_secret_key=CONNECTION_ARGS["ORODHA_KEYCLOAK_CLIENT_SECRET_KEY"]
+        client_server=CONNECTION_ARGS["ORODHA_KEYCLOAK_CLIENT_SERVER"],
+        realm_name=CONNECTION_ARGS["ORODHA_KEYCLOAK_REALM_NAME"],
+        client_id=CONNECTION_ARGS["ORODHA_KEYCLOAK_CLIENT_ID"],
+        client_secret_key=CONNECTION_ARGS["ORODHA_KEYCLOAK_CLIENT_SECRET_KEY"]
     )
 
     assert credentials.server_url == CONNECTION_ARGS["ORODHA_KEYCLOAK_CLIENT_SERVER"]

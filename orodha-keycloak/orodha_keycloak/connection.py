@@ -14,12 +14,12 @@ class OrodhaCredentials:
     If kwargs are not passed in, The credentials are pulled from the environment.
 
     Args(as kwargs):
-        orodha_keycloak_client_server(str): The url of the server that our keycloak is hosted at
-        orodha_keycloak_realm_name(str): The name of the keycloak realm that we are attempting to access.
-        orodha_keycloak_client_id(str): The keycloak client_id that we are using for the connection.
-        orodha_keycloak_client_secret_key(str): The secret key of the keycloak client.
-        orodha_keycloak_username(str) - Optional: The username of the user being impersonated by python-keycloak
-        orodha_keycloak_password(str) - Optional: The password of the user being impersonated by python-keycloak
+        client_server(str): The url of the server that our keycloak is hosted at
+        realm_name(str): The name of the keycloak realm that we are attempting to access.
+        client_id(str): The keycloak client_id that we are using for the connection.
+        client_secret_key(str): The secret key of the keycloak client.
+        username(str) - Optional: The username of the user being impersonated by python-keycloak
+        password(str) - Optional: The password of the user being impersonated by python-keycloak
 
     Raises:
         InvalidConnectionException: If required arguments are not available
@@ -28,12 +28,12 @@ class OrodhaCredentials:
 
     def __init__(self, **kwargs):
         arg_dict = {
-            "orodha_keycloak_client_server": kwargs.get("orodha_keycloak_client_server"),
-            "orodha_keycloak_realm_name": kwargs.get("orodha_keycloak_realm_name"),
-            "orodha_keycloak_client_id": kwargs.get("orodha_keycloak_client_id"),
-            "orodha_keycloak_client_secret_key": kwargs.get("orodha_keycloak_client_secret_key"),
-            "orodha_keycloak_username": kwargs.get("orodha_keycloak_username"),
-            "orodha_keycloak_password": kwargs.get("orodha_keycloak_password")
+            "orodha_keycloak_client_server": kwargs.get("client_server"),
+            "orodha_keycloak_realm_name": kwargs.get("realm_name"),
+            "orodha_keycloak_client_id": kwargs.get("client_id"),
+            "orodha_keycloak_client_secret_key": kwargs.get("client_secret_key"),
+            "orodha_keycloak_username": kwargs.get("username"),
+            "orodha_keycloak_password": kwargs.get("password")
         }
 
         for key, value in arg_dict.items():
