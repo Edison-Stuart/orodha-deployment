@@ -174,7 +174,7 @@ class OrodhaKeycloakClient:
 
         return new_user
 
-    def delete_user(self, user_id):
+    def delete_user(self, user_id: str) -> dict:
         """
         Deletes a keycloak user with a given user_id.
 
@@ -208,7 +208,33 @@ class OrodhaKeycloakClient:
 
         return return_value
 
-    def decode_jwt(self, token):
+    def get_exchange_token(
+            self, token: str,
+            service_client: str,
+            target_client: str,
+            target_user: str) -> dict:
+        """
+        Function which accepts a token from a client and returns a
+        new token used for access to a different client.
+
+        Args:
+            token(str): The token given to the sending client, used to obtain exchange token.
+            service_client(str): The client id that is related to the sending client.
+            target_client(str): The client id that is related to the client we are attempting to
+                get a token from.
+            target_user(str): The user_id of the target user we are attempting to impersonate.
+
+        Returns:
+            dict: Dictionary containing our new token and some metadata about said token.
+        """
+        return self.client_connection.exchange_token(
+            token,
+            service_client,
+            target_client,
+            target_user
+        )
+
+    def decode_jwt(self, token: str) -> dict:
         """
         Small helper function which decodes a JWT token using the client connection.
 
