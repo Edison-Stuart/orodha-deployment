@@ -83,7 +83,7 @@ class OrodhaKeycloakClient:
     shopping list app.
 
     Args:
-        CredentialsObject(OrodhaCredentials): An instance of the OrodhaCredentials object containing
+        credentials_object(OrodhaCredentials): An instance of the OrodhaCredentials object containing
             our client information
 
     Raises:
@@ -93,9 +93,9 @@ class OrodhaKeycloakClient:
 
     def __init__(
         self,
-        CredentialsObject: OrodhaCredentials
+        credentials_object: OrodhaCredentials
     ):
-        self.credentials = CredentialsObject
+        self.credentials = credentials_object
         try:
             self.client_connection = orodha_keycloak.connections.client.create_client_connection(
                 server_url=self.credentials.server_url,
@@ -108,7 +108,6 @@ class OrodhaKeycloakClient:
                 server_url=self.credentials.server_url,
                 realm_name=self.credentials.realm_name,
                 client_id=self.credentials.client_id,
-                client_secret_key=None
             )
         try:
             if self.credentials.client_secret_key:
