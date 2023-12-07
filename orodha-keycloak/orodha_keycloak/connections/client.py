@@ -5,7 +5,7 @@ set up as a non privileged user for our main class.
 from keycloak import KeycloakOpenID
 
 
-def create_client_connection(server_url: str, realm_name: str, client_id: str, client_secret_key: str):
+def create_client_connection(server_url: str, realm_name: str, client_id: str, client_secret_key: str = None):
     """
     Creates and returns keycloak admin connection with given args
 

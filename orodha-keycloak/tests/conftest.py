@@ -9,6 +9,12 @@ from tests.fixtures.keycloak import MOCK_DATA
 
 
 class MockEnvironment:
+    """
+    Context manager which is used to make changes to environment
+    variables in order to test if our code reacts correctly to different variables
+    being present.
+    """
+
     def __init__(self, **kwargs):
         self.old_env = deepcopy(os.environ)
         self.new_env = deepcopy(os.environ)
@@ -55,6 +61,9 @@ class MockKeycloakClient:
 
     def decode_token(self, *args, **kwargs):
         return MOCK_DATA.get("mock_decoded_token")
+
+    def exchange_token(self, *args, **kwargs):
+        return MOCK_DATA.get("mock_exchange_token")
 
 
 @pytest.fixture

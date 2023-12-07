@@ -14,7 +14,7 @@ class OrodhaCredentials:
     If kwargs are not passed in, The credentials are pulled from the environment.
 
     Args(as kwargs):
-        client_server(str): The url of the server that our keycloak is hosted at
+        server_url(str): The url of the server that our keycloak is hosted at
         realm_name(str): The name of the keycloak realm that we are attempting to access.
         client_id(str): The keycloak client_id that we are using for the connection.
         client_secret_key(str): The secret key of the keycloak client.
@@ -28,7 +28,7 @@ class OrodhaCredentials:
 
     def __init__(self, **kwargs):
         arg_dict = {
-            "orodha_keycloak_client_server": kwargs.get("client_server"),
+            "orodha_keycloak_server_url": kwargs.get("server_url"),
             "orodha_keycloak_realm_name": kwargs.get("realm_name"),
             "orodha_keycloak_client_id": kwargs.get("client_id"),
             "orodha_keycloak_client_secret_key": kwargs.get("client_secret_key"),
@@ -41,7 +41,7 @@ class OrodhaCredentials:
                 arg_dict[key] = os.environ.get(key.upper())
 
         required_args_available = arg_dict[
-            "orodha_keycloak_client_server"] and arg_dict[
+            "orodha_keycloak_server_url"] and arg_dict[
                 "orodha_keycloak_realm_name"] and arg_dict["orodha_keycloak_client_id"]
 
         username_password_auth_available = arg_dict[
@@ -50,13 +50,13 @@ class OrodhaCredentials:
 
         if not required_args_available:
             raise InvalidConnectionException(
-                ["orodha_keycloak_client_server",
+                ["orodha_keycloak_server_url",
                     "orodha_keycloak_realm_name", "orodha_keycloak_client_id"],
                 message="All required arguments must be made available as kwargs or" +
                 " in the environment."
             )
 
-        self.server_url = arg_dict["orodha_keycloak_client_server"]
+        self.server_url = arg_dict["orodha_keycloak_server_url"]
         self.realm_name = arg_dict["orodha_keycloak_realm_name"]
         self.client_id = arg_dict["orodha_keycloak_client_id"]
 
@@ -83,12 +83,8 @@ class OrodhaKeycloakClient:
     shopping list app.
 
     Args:
-        server_url(str): The url of the server that our keycloak is hosted at
-        realm_name(str): The name of the keycloak realm that we are attempting to access.
-        client_id(str): The keycloak client_id that we are using for the connection.
-        client_secret_key(str): The secret key of the keycloak client.
-        username(str) - Optional: The username of the user being impersonated by python-keycloak
-        password(str) - Optional: The password of the user being impersonated by python-keycloak
+        credentials_object(OrodhaCredentials): An instance of the OrodhaCredentials object containing
+            our client information
 
     Raises:
         InvalidConnectionException: If the connection variables given are invalid
@@ -97,40 +93,36 @@ class OrodhaKeycloakClient:
 
     def __init__(
         self,
-        server_url: str,
-        realm_name: str,
-        client_id: str,
-        client_secret_key: str = None,
-        username: str = None,
-        password: str = None
+        credentials_object: OrodhaCredentials
     ):
-        username_password_auth_available = username and password
-
-        if not client_secret_key and not username_password_auth_available:
-            raise InvalidConnectionException(
-                ["client_secret_key", "username", "password"],
-                message="Must have either client_secret_key or username and password"
+        self.credentials = credentials_object
+        try:
+            self.client_connection = orodha_keycloak.connections.client.create_client_connection(
+                server_url=self.credentials.server_url,
+                realm_name=self.credentials.realm_name,
+                client_id=self.credentials.client_id,
+                client_secret_key=self.credentials.client_secret_key
             )
-
-        self.client_connection = orodha_keycloak.connections.client.create_client_connection(
-            server_url=server_url,
-            realm_name=realm_name,
-            client_id=client_id,
-            client_secret_key=client_secret_key
-        )
-        if client_secret_key:
-            self.admin_connection = orodha_keycloak.connections.admin.create_admin_connection(
-                server_url=server_url,
-                realm_name=realm_name,
-                client_id=client_id,
-                client_secret_key=client_secret_key,
+        except AttributeError:
+            self.client_connection = orodha_keycloak.connections.client.create_client_connection(
+                server_url=self.credentials.server_url,
+                realm_name=self.credentials.realm_name,
+                client_id=self.credentials.client_id,
             )
-        else:
+        try:
+            if self.credentials.client_secret_key:
+                self.admin_connection = orodha_keycloak.connections.admin.create_admin_connection(
+                    server_url=self.credentials.server_url,
+                    realm_name=self.credentials.realm_name,
+                    client_id=self.credentials.client_id,
+                    client_secret_key=self.credentials.client_secret_key,
+                )
+        except AttributeError:
             self.admin_connection = orodha_keycloak.connections.admin.create_admin_connection(
-                server_url=server_url,
-                realm_name=realm_name,
-                username=username,
-                password=password
+                server_url=self.credentials.server_url,
+                realm_name=self.credentials.realm_name,
+                username=self.credentials.username,
+                password=self.credentials.password
             )
 
     def add_user(
@@ -174,7 +166,7 @@ class OrodhaKeycloakClient:
 
         return new_user
 
-    def delete_user(self, user_id):
+    def delete_user(self, user_id: str) -> dict:
         """
         Deletes a keycloak user with a given user_id.
 
@@ -208,7 +200,26 @@ class OrodhaKeycloakClient:
 
         return return_value
 
-    def decode_jwt(self, token):
+    def get_exchange_token(self, target_user: str) -> dict:
+        """
+        Function which accepts a token from a client and returns a
+        new token used for access to a different client.
+
+        Args:
+            target_client(str): The client id that is related to the client we are attempting to
+                get a token from.
+            target_user(str): The user_id of the target user we are attempting to impersonate.
+
+        Returns:
+            dict: Dictionary containing our new token and some metadata about said token.
+        """
+        return self.client_connection.exchange_token(
+            token=None,
+            audience=self.credentials.client_id,
+            subject=target_user
+        )
+
+    def decode_jwt(self, token: str) -> dict:
         """
         Small helper function which decodes a JWT token using the client connection.
 

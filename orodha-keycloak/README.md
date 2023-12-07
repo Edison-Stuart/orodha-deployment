@@ -18,6 +18,7 @@ Once you do this, you have to give you service account the required permissions 
 -   deleting users
 -   querying users
 -   decoding tokens
+-   exchanging tokens
 
 ## Usage
 
@@ -34,8 +35,11 @@ the method class and method docstrings for the class.
 
 ## Description
 
-This package contains one main class, OrodhaKeycloakClient.
-The class expects the following arguments upon instantiation:
+This package contains two classes: OrodhaKeycloakClient and OrodhaCredentials.
+OrodhaKeycloakClient expects an OrodhaCredentials object loaded with the values needed
+by keycloak.
+The OrodhaCredentials class expects the following arguments
+to be in the environment or passed in as kwargs upon instantiation:
 
 -   server_url: the main url for our keycloak server. example: `http://keycloak:{port}/auth/`
 -   realm_name: The name of the keycloak realm that you want to interfacing with.
@@ -48,16 +52,25 @@ or you have to pass a username and a password to the class. If you do not have o
 -   username / password: The username and password of a keycloak user that you want to log in as in order to
     take actions on the keycloak realm.
 
+If you would like OrodhaCredentials to populate itself from the environment, load these required variables into the environment,
+making sure that the keys are capitalized and begin with ORODHA_KEYCLOAK, like so:
+
+`ORODHA_KEYCLOAK_SERVER_URL`
+
+The OrodhaKeycloakClient class is used to make requests and obtain information from our keycloak server.
 The current methods available on this class are:
 
 -   add_user: Adds a user to keycloak with a password.
 -   delete_user: Deletes a keycloak user with a given user_id.
 -   get_user: Takes either a user_id or a token and returns the user if they exist.
+-   get_exchange_token: Takes target_user which can either be a keycloak username or user id, and
+    returns a token used for impersonating the target_user in requests.
+-   decode_jwt: Small helper function which decodes a JWT token using the client connection.
+
+decode_jwt response schema:
 
 ```
 {'id': 'ddcbcb65-4515-4e72-8b0e-9e844cb7f06a', 'createdTimestamp': 1695143223350, 'username': 'demoadmin', 'enabled': True, 'totp': False, 'emailVerified': False, 'disableableCredentialTypes': [], 'requiredActions': [], 'notBefore': 0, 'access': {'manageGroupMembership': True, 'view': True, 'mapRoles': True, 'impersonate': True, 'manage': True}}
 ```
 
--   decode_jwt: Small helper function which decodes a JWT token using the client connection.
-
-but more may be added in future versions.
+More may be added in future versions.
